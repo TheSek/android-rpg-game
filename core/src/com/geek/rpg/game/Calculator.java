@@ -13,6 +13,15 @@ public class Calculator {
         return dmg;
     }
 
+    public static int getRangedDamage(Unit attacker, Unit target) {
+        int dmg = attacker.getStats().getDexterity() - target.getStats().getDefence();
+        dmg = (int) (dmg * 0.8f + (float) dmg * Math.random() * 0.4f);
+        if (dmg < 1) {
+            dmg = 1;
+        }
+        return dmg;
+    }
+
     public static int getFireBallDamage(Unit attacker, Unit target) {
         int dmg = attacker.getStats().getSpellpower();
         dmg = (int) (dmg * 0.8f + (float) dmg * Math.random() * 0.2f);

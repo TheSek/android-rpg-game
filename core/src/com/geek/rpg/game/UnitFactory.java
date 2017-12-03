@@ -1,10 +1,11 @@
 package com.geek.rpg.game;
 
-import com.badlogic.gdx.graphics.Texture;
+
 import com.geek.rpg.game.actions.BaseAction;
 import com.geek.rpg.game.actions.DefenceStanceAction;
 import com.geek.rpg.game.actions.FireballAction;
 import com.geek.rpg.game.actions.MeleeAttackAction;
+import com.geek.rpg.game.actions.RangedAttackAction;
 import com.geek.rpg.game.actions.RestAction;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.Map;
 
 public class UnitFactory {
     public enum UnitType {
-        KNIGHT, SKELETON, MAGE;
+        KNIGHT, SKELETON, MAGE, ARCHER;
     }
 
     private Map<UnitType, Unit> data;
@@ -59,44 +60,51 @@ public class UnitFactory {
         this.actions.add(new DefenceStanceAction());
         this.actions.add(new RestAction());
         this.actions.add(new FireballAction());
+        this.actions.add(new RangedAttackAction());
     }
 
     public void createUnitPatterns() {
         data = new HashMap<UnitType, Unit>();
         Stats knightStats = new Stats(1, 20, 10, 30, 2, 5, 5f, 1f, 5f, 1f, 5f);
-        Unit knight = new Unit(UnitType.KNIGHT, Assets.getInstance().getAtlas().findRegion("knightAnim"), knightStats);
+        Unit knight = new Unit(UnitType.KNIGHT, Assets.getInstance().getAtlas().findRegion("knightAnim"), knightStats, 90, 150);
         knight.getActions().add(actions.get(0));
         knight.getActions().add(actions.get(1));
         data.put(UnitType.KNIGHT, knight);
 
         Stats skeletonStats = new Stats(1, 10, 20, 15, 1, 0, 2.5f, 5.0f, 5.0f, 1f, 0.5f);
-        Unit skeleton = new Unit(UnitType.SKELETON, Assets.getInstance().getAtlas().findRegion("skeleton"), skeletonStats);
+        Unit skeleton = new Unit(UnitType.SKELETON, Assets.getInstance().getAtlas().findRegion("skeleton"), skeletonStats, 90, 150);
         skeleton.getActions().add(actions.get(0));
         skeleton.getActions().add(actions.get(2));
         data.put(UnitType.SKELETON, skeleton);
 
         Stats mageStats = new Stats(1, 5, 10, 10, 0, 15, 0.5f, 0.5f, 2f, 0.2f, 5.0f);
-        Unit mage = new Unit(UnitType.MAGE, Assets.getInstance().getAtlas().findRegion("mage"), mageStats);
+        Unit mage = new Unit(UnitType.MAGE, Assets.getInstance().getAtlas().findRegion("mage"), mageStats, 90, 150);
         mage.getActions().add(actions.get(3));
         mage.getActions().add(actions.get(2));
         data.put(UnitType.MAGE, mage);
+
+        Stats archerStats = new Stats(1, 5, 20, 5, 1, 1, 0.5f, 2.5f, 1f, 0.2f, 0.1f);
+        Unit archer = new Unit(UnitType.ARCHER, Assets.getInstance().getAtlas().findRegion("archer"), archerStats, 90, 150);
+        archer.getActions().add(actions.get(4));
+        data.put(UnitType.ARCHER, archer);
     }
 
 
     public void reloadUnit(Unit unit) {
         Unit unitPattern = data.get(unit.getType());
-        unit.reload(unitPattern.getTexture(), unitPattern.getActions());
-        if (unit.isAI()) {
+        unit.reload(unitPattern.getTexture(), unitPattern.getActions(), unitPattern.getWidth(), unitPattern.getHeight());
+        if (unit.isAutopiloted()) {
             unit.setAutopilot(aiBank.get(0));
         }
     }
 
     public Unit createUnit(UnitType unitType, boolean flip, boolean ai, int level) {
         Unit unitPattern = data.get(unitType);
-        Unit unit = new Unit(unitType, unitPattern.getTexture(), (Stats) unitPattern.getStats().clone());
+        Unit unit = new Unit(unitType, unitPattern.getTexture(), (Stats) unitPattern.getStats().clone(), unitPattern.getWidth(), unitPattern.getHeight());
         unit.setLevelTo(level);
         unit.setActions(unitPattern.getActions());
         if (ai) {
+            unit.setAutopiloted(true);
             unit.setAutopilot(aiBank.get(0));
         }
         unit.setFlip(flip);

@@ -13,8 +13,6 @@ public class SpecialFX {
     private float time;
     private float frameSpeed;
     private float maxTime;
-    private int maxFrames;
-    private TextureRegion texture;
     private TextureRegion[] regions;
 
     public boolean isActive() {
@@ -24,30 +22,20 @@ public class SpecialFX {
     public SpecialFX() {
         positionFrom = new Vector2(0, 0);
         positionTo = new Vector2(0, 0);
-        maxFrames = 64;
         frameSpeed = 0.01f;
         time = -100.0f;
         maxTime = 0;
         scaleFrom = 1.0f;
         scaleTo = 1.0f;
-        texture = Assets.getInstance().getAtlas().findRegion("explosion64");
-        TextureRegion[][] tr = new TextureRegion(texture).split(64, 64);
-        regions = new TextureRegion[maxFrames];
-        int counter = 0;
-        for (int i = 0; i < tr.length; i++) {
-            for (int j = 0; j < tr[0].length; j++) {
-                regions[counter] = tr[i][j];
-                counter++;
-            }
-        }
     }
 
-    public void setup(float xFrom, float yFrom, float xTo, float yTo, float maxTime, float scaleFrom, float scaleTo, float delay, boolean oneCycle) {
+    public void setup(TextureRegion[] regions, float xFrom, float yFrom, float xTo, float yTo, float maxTime, float scaleFrom, float scaleTo, float delay, boolean oneCycle) {
+        this.regions = regions;
         this.positionFrom.set(xFrom, yFrom);
         this.positionTo.set(xTo, yTo);
         this.maxTime = maxTime;
         if (oneCycle) {
-            frameSpeed = maxTime / maxFrames;
+            frameSpeed = maxTime / regions.length;
         } else {
             frameSpeed = 0.01f;
         }
@@ -58,7 +46,7 @@ public class SpecialFX {
 
     public void render(SpriteBatch batch) {
         if (isActive() && time > 0.0f) {
-            int currentFrame = (int) (time / frameSpeed) % maxFrames;
+            int currentFrame = (int) (time / frameSpeed) % regions.length;
             float x = positionFrom.x + (time / maxTime) * (positionTo.x - positionFrom.x);
             float y = positionFrom.y + (time / maxTime) * (positionTo.y - positionFrom.y);
             float currentScale = scaleFrom + (time / maxTime) * (scaleTo - scaleFrom);

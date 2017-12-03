@@ -1,4 +1,4 @@
-package com.geek.rpg.game;
+package com.geek.rpg.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.geek.rpg.game.screens.ScreenManager;
+import com.geek.rpg.game.Assets;
 
 /**
  * Created by FlameXander on 20.11.2017.
@@ -19,8 +19,8 @@ public class LoadingScreen implements Screen {
 
     public LoadingScreen(SpriteBatch batch) {
         this.batch = batch;
-        Pixmap pixmap = new Pixmap(1280, 20, Pixmap.Format.RGB888);
-        pixmap.setColor(Color.RED);
+        Pixmap pixmap = new Pixmap(1280, 40, Pixmap.Format.RGB888);
+        pixmap.setColor(Color.GREEN);
         pixmap.fill();
         texture = new Texture(pixmap);
     }
@@ -33,8 +33,12 @@ public class LoadingScreen implements Screen {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        if(Assets.getInstance().getAssetManager().update()) {
+            Assets.getInstance().makeLinks();
+            ScreenManager.getInstance().goToTarget();
+        }
         batch.begin();
-        batch.draw(texture, 0, 0, 1280 * Assets.getInstance().getAssetManager().getProgress(), 20);
+        batch.draw(texture, 0, 0, 1280 * Assets.getInstance().getAssetManager().getProgress(), 40);
         batch.end();
     }
 

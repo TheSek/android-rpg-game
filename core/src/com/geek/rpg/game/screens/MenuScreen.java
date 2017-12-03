@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.geek.rpg.game.Assets;
 import com.geek.rpg.game.GameSession;
-import com.geek.rpg.game.ScreenManager;
 
 /**
  * Created by FlameXander on 16.11.2017.
@@ -25,7 +24,7 @@ import com.geek.rpg.game.ScreenManager;
 public class MenuScreen implements Screen {
     private Texture backgroundTexture;
     private BitmapFont font96;
-    private BitmapFont font36;
+    private BitmapFont font32;
     private Music music;
     private SpriteBatch batch;
 
@@ -40,64 +39,12 @@ public class MenuScreen implements Screen {
     @Override
     public void show() {
         backgroundTexture = Assets.getInstance().getAssetManager().get("background.png", Texture.class);
+        font32 = Assets.getInstance().getAssetManager().get("zorque32.ttf", BitmapFont.class);
+        font96 = Assets.getInstance().getAssetManager().get("zorque96.ttf", BitmapFont.class);
         music = Gdx.audio.newMusic(Gdx.files.internal("Jumping bat.wav"));
         music.setLooping(true);
         music.play();
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("zorque.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 96;
-        parameter.borderColor = Color.BLACK;
-        parameter.borderWidth = 1;
-        parameter.shadowColor = Color.BLACK;
-        parameter.shadowOffsetX = -3;
-        parameter.shadowOffsetY = 3;
-        parameter.color = Color.WHITE;
-        font96 = generator.generateFont(parameter);
-        parameter.size = 36;
-        font36 = generator.generateFont(parameter);
-        generator.dispose();
-        stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
-        Gdx.input.setInputProcessor(stage);
-        skin = new Skin();
-
-        skin.addRegions(Assets.getInstance().getAtlas());
-
-        skin.add("font36", font36);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        textButtonStyle.up = skin.getDrawable("menuBtn");
-        textButtonStyle.font = font36;
-        skin.add("tbs", textButtonStyle);
-
-        Button btnNewGame = new TextButton("START NEW GAME", skin, "tbs");
-        Button btnContinueGame = new TextButton("CONTINUE GAME", skin, "tbs");
-        Button btnExitGame = new TextButton("EXIT GAME", skin, "tbs");
-        btnNewGame.setPosition(400, 300);
-        btnContinueGame.setPosition(400, 180);
-        btnExitGame.setPosition(400, 60);
-        stage.addActor(btnNewGame);
-        stage.addActor(btnContinueGame);
-        stage.addActor(btnExitGame);
-        btnNewGame.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                GameSession.getInstance().startNewSession();
-                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.BATTLE);
-            }
-        });
-        btnContinueGame.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                GameSession.getInstance().loadSession();
-                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.BATTLE);
-//                GameSession.getInstance().saveSession();
-            }
-        });
-        btnExitGame.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
-            }
-        });
+        createGUI();
     }
 
     @Override
@@ -135,11 +82,50 @@ public class MenuScreen implements Screen {
 
     }
 
+    public void createGUI() {
+        stage = new Stage(ScreenManager.getInstance().getViewport(), batch);
+        Gdx.input.setInputProcessor(stage);
+        skin = new Skin();
+        skin.addRegions(Assets.getInstance().getAtlas());
+        skin.add("font32", font32);
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.up = skin.getDrawable("menuBtn");
+        textButtonStyle.font = font32;
+        skin.add("tbs", textButtonStyle);
+        Button btnNewGame = new TextButton("Start new game", skin, "tbs");
+        Button btnContinueGame = new TextButton("CONTINUE GAME", skin, "tbs");
+        Button btnExitGame = new TextButton("EXIT GAME", skin, "tbs");
+        btnNewGame.setPosition(400, 300);
+        btnContinueGame.setPosition(400, 180);
+        btnExitGame.setPosition(400, 60);
+        stage.addActor(btnNewGame);
+        stage.addActor(btnContinueGame);
+        stage.addActor(btnExitGame);
+        btnNewGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                GameSession.getInstance().startNewSession();
+                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.BATTLE);
+            }
+        });
+        btnContinueGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                GameSession.getInstance().loadSession();
+                ScreenManager.getInstance().switchScreen(ScreenManager.ScreenType.BATTLE);
+            }
+        });
+        btnExitGame.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+    }
+
     @Override
     public void dispose() {
         music.dispose();
         backgroundTexture.dispose();
-        font36.dispose();
-        font96.dispose();
     }
 }

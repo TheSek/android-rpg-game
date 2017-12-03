@@ -25,22 +25,23 @@ public class Unit implements Serializable {
         }
     }
 
-    transient private BattleScreen battleScreen;
     private Hero hero;
+    transient private BattleScreen battleScreen;
     transient private Unit target;
     transient private TextureRegion texture;
     transient private TextureRegion textureHpBar;
+    transient private TextureRegion[] textureInfo;
     private int hp;
     private int maxHp;
     private int level;
     private Rectangle rect;
-    private Autopilot autopilot;
+    private boolean autopiloted;
+    transient private Autopilot autopilot;
     private Vector2 position;
     private boolean flip;
     private float attackAction;
     private float takeDamageAction;
     private Stats stats;
-    transient private Group actionPanel;
     private List<Effect> effects;
     transient private List<BaseAction> actions;
     private UnitFactory.UnitType type;
@@ -53,26 +54,31 @@ public class Unit implements Serializable {
     private int maxAnimationType;
     private int animationFrame;
 
-    public static final int WIDTH = 90;
-    public static final int HEIGHT = 150;
+    private int width;
+    private int height;
 
+    // region Getters/Setters
     public void setCurrentAnimation(AnimationType currentAnimation) {
         this.currentAnimation = currentAnimation;
+    }
+
+    public boolean isAutopiloted() {
+        return autopiloted;
+    }
+
+    public void setAutopiloted(boolean autopiloted) {
+        this.autopiloted = autopiloted;
     }
 
     public Autopilot getAutopilot() {
         return autopilot;
     }
 
-    public void setActionPanel(Group actionPanel) {
-        this.actionPanel = actionPanel;
-    }
-
     public void setAutopilot(Autopilot autopilot) {
         this.autopilot = autopilot;
     }
 
-    public boolean isAI() {
+    public boolean isAutoPilot() {
         return autopilot != null;
     }
 
@@ -86,10 +92,6 @@ public class Unit implements Serializable {
 
     public void setHero(Hero hero) {
         this.hero = hero;
-    }
-
-    public Group getActionPanel() {
-        return actionPanel;
     }
 
     public void setAttackAction(float attackAction) {
@@ -148,7 +150,16 @@ public class Unit implements Serializable {
         return type;
     }
 
-    public Unit(UnitFactory.UnitType type, TextureRegion texture, Stats stats) {
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+    // endregion
+
+    public Unit(UnitFactory.UnitType type, TextureRegion texture, Stats stats, int width, int height) {
         this.texture = texture;
         this.type = type;
         this.effects = new ArrayList<Effect>();
@@ -156,21 +167,24 @@ public class Unit implements Serializable {
         this.actions = new ArrayList<BaseAction>();
         this.stats = stats;
         this.textureHpBar = Assets.getInstance().getAtlas().findRegion("hpBar");
+        this.textureInfo = Assets.getInstance().getAtlas().findRegion("unitInfo").split(200, 200)[0];
         this.animationSpeed = 0.2f;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
+        this.width = width;
+        this.height = height;
+        this.frames = this.texture.split(width, height);
         this.maxFrame = this.frames[0].length;
         this.maxAnimationType = this.frames.length - 1;
         this.currentAnimation = AnimationType.IDLE;
     }
 
-    public void reload(TextureRegion texture, List<BaseAction> actions) {
+    public void reload(TextureRegion texture, List<BaseAction> actions, int width, int height) {
         this.textureHpBar = Assets.getInstance().getAtlas().findRegion("hpBar");
+        this.textureInfo = Assets.getInstance().getAtlas().findRegion("unitInfo").split(200, 200)[0];
         this.texture = texture;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
+        this.frames = this.texture.split(width, height);
         this.actions = actions;
         this.effects.clear();
         this.animationSpeed = 0.2f;
-        this.frames = this.texture.split(WIDTH, HEIGHT);
         this.maxFrame = this.frames[0].length;
         this.maxAnimationType = this.frames.length - 1;
         this.currentAnimation = AnimationType.IDLE;
@@ -184,7 +198,7 @@ public class Unit implements Serializable {
     public void setToMap(BattleScreen battleScreen, int cellX, int cellY) {
         this.battleScreen = battleScreen;
         this.position.set(battleScreen.getStayPoints()[cellX][cellY]);
-        this.rect = new Rectangle(position.x, position.y, texture.getRegionWidth(), texture.getRegionHeight());
+        this.rect = new Rectangle(position.x, position.y, width, height);
     }
 
     public void evade() {
@@ -206,7 +220,7 @@ public class Unit implements Serializable {
         if (flip) {
             frames[n][animationFrame].flip(true, false);
         }
-        batch.draw(frames[n][animationFrame], position.x + dx, position.y, 0, 0, WIDTH, HEIGHT, 1, 1, ang);
+        batch.draw(frames[n][animationFrame], position.x + dx, position.y, width / 2, 0, width, height, 1, 1, ang);
         if (flip) {
             frames[n][animationFrame].flip(true, false);
         }
@@ -220,6 +234,12 @@ public class Unit implements Serializable {
         batch.draw(textureHpBar, position.x, position.y + 130, (int) ((float) hp / (float) maxHp * textureHpBar.getRegionWidth()), 20);
         batch.setColor(1, 1, 1, 1);
         font.draw(batch, String.valueOf(hp), position.x, position.y + 149, 90, 1, false);
+    }
+
+    public void renderInfoPanel(SpriteBatch batch, BitmapFont font) {
+        batch.draw(textureInfo[0], 20, 20, 200, 200);
+        batch.draw(frames[0][0], 25, 75);
+        batch.draw(textureInfo[1], 20, 20, 200, 200);
     }
 
     public void update(float dt) {

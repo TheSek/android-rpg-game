@@ -35,6 +35,7 @@ public class Stats implements Cloneable, Serializable {
         return null;
     }
 
+    // region Getters/Setters
     public int getBaseStrength() {
         return baseStrength;
     }
@@ -154,6 +155,7 @@ public class Stats implements Cloneable, Serializable {
     public void setSpellPowerPerLevel(float spellPowerPerLevel) {
         this.spellPowerPerLevel = spellPowerPerLevel;
     }
+    // endregion
 
     public Stats(int level, int baseStrength, int baseDexterity, int baseEndurance, int baseDefence, int baseSpellPower, float strengthPerLevel, float dexterityPerLevel, float endurancePerLevel, float defencePerLevel, float spellPowerPerLevel) {
         this.baseStrength = baseStrength;

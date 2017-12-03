@@ -15,7 +15,7 @@ public class InfoSystem {
     }
 
     public void addMessage(String text, Unit unit, FlyingText.Colors color) {
-        addMessage(text, unit.getPosition().x + unit.WIDTH / 2, unit.getPosition().y + unit.HEIGHT / 2, color);
+        addMessage(text, unit.getPosition().x + unit.getWidth() / 2, unit.getPosition().y + unit.getHeight() / 2, color);
     }
 
     public void addMessage(String text, float x, float y, FlyingText.Colors color) {

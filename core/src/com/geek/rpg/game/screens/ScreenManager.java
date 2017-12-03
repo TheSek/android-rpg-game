@@ -1,11 +1,11 @@
-package com.geek.rpg.game;
+package com.geek.rpg.game.screens;
 
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.geek.rpg.game.screens.BattleScreen;
-import com.geek.rpg.game.screens.MenuScreen;
+import com.geek.rpg.game.Assets;
+import com.geek.rpg.game.RpgGame;
 
 /**
  * Created by FlameXander on 13.11.2017.
@@ -28,13 +28,15 @@ public class ScreenManager {
     private LoadingScreen loadingScreen;
     private MenuScreen menuScreen;
 
+    private Screen targetScreen;
+
     public Viewport getViewport() {
         return viewport;
     }
 
     public void init(RpgGame rpgGame, SpriteBatch batch) {
         this.rpgGame = rpgGame;
-        this.loadingScreen = new LoadingScreen(batch);
+        this.loadingScreen = new com.geek.rpg.game.screens.LoadingScreen(batch);
         this.battleScreen = new BattleScreen(batch);
         this.menuScreen = new MenuScreen(batch);
         this.viewport = new FitViewport(1280, 720);
@@ -58,14 +60,20 @@ public class ScreenManager {
         }
         switch (type) {
             case MENU:
+                rpgGame.setScreen(loadingScreen);
+                targetScreen = menuScreen;
                 Assets.getInstance().loadAssets(ScreenType.MENU);
-                rpgGame.setScreen(menuScreen);
                 break;
             case BATTLE:
+                rpgGame.setScreen(loadingScreen);
+                targetScreen = battleScreen;
                 Assets.getInstance().loadAssets(ScreenType.BATTLE);
-                rpgGame.setScreen(battleScreen);
                 break;
         }
+    }
+
+    public void goToTarget() {
+        rpgGame.setScreen(targetScreen);
     }
 
     public void dispose() {

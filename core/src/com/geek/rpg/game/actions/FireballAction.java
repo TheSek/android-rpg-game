@@ -22,8 +22,8 @@ public class FireballAction extends BaseAction {
         me.setCurrentAnimation(Unit.AnimationType.ATTACK);
         int dmg = Calculator.getFireBallDamage(me, me.getTarget());
         me.getTarget().changeHp(-dmg);
-        me.getBattleScreen().getSpecialFXEmitter().setup(me, me.getTarget(), 1.0f, 2f, 2f, 0.0f, true);
-        me.getBattleScreen().getSpecialFXEmitter().setup(me.getTarget(), me.getTarget(), 1.0f, 2f, 10f, 1.0f, true);
+        me.getBattleScreen().getSpecialFXEmitter().setup("explosion64", me, me.getTarget(), 0.6f, 1f, 3f, 0.0f, true);
+        me.getBattleScreen().getSpecialFXEmitter().setup("explosion64", me.getTarget(), me.getTarget(), 1.0f, 3f, 10f, 0.6f, true);
         return true;
     }
 }

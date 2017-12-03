@@ -17,6 +17,13 @@ knightAnim
   orig: 360, 300
   offset: 0, 0
   index: -1
+unitInfo
+  rotate: false
+  xy: 516, 304
+  size: 400, 200
+  orig: 400, 200
+  offset: 0, 0
+  index: -1
 skeleton
   rotate: false
   xy: 878, 2
@@ -26,42 +33,35 @@ skeleton
   index: -1
 mage
   rotate: false
-  xy: 516, 304
+  xy: 918, 304
   size: 90, 150
   orig: 90, 150
   offset: 0, 0
   index: -1
 knight
   rotate: false
-  xy: 608, 304
+  xy: 2, 516
   size: 90, 150
   orig: 90, 150
   offset: 0, 0
   index: -1
 archer
   rotate: false
-  xy: 700, 304
+  xy: 2, 668
   size: 90, 150
   orig: 90, 150
   offset: 0, 0
   index: -1
-cenarius
-  rotate: false
-  xy: 2, 516
-  size: 886, 140
-  orig: 886, 140
-  offset: 0, 0
-  index: -1
 actionPanel
   rotate: false
-  xy: 2, 658
+  xy: 94, 516
   size: 840, 140
   orig: 840, 140
   offset: 0, 0
   index: -1
 menuBtn
   rotate: false
-  xy: 2, 800
+  xy: 94, 658
   size: 480, 100
   orig: 480, 100
   offset: 0, 0
@@ -75,35 +75,35 @@ btnRanged
   index: -1
 btnMeleeAttack
   rotate: false
-  xy: 792, 304
+  xy: 2, 820
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 btnHeal
   rotate: false
-  xy: 792, 386
+  xy: 2, 902
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 btnFireball
   rotate: false
-  xy: 874, 304
+  xy: 936, 516
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 btnRegen
   rotate: false
-  xy: 874, 304
+  xy: 936, 516
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
   index: -1
 btnDefence
   rotate: false
-  xy: 874, 386
+  xy: 94, 760
   size: 80, 80
   orig: 80, 80
   offset: 0, 0
@@ -124,14 +124,14 @@ arrow
   index: -1
 selector
   rotate: false
-  xy: 516, 456
+  xy: 918, 456
   size: 90, 30
   orig: 90, 30
   offset: 0, 0
   index: -1
 hpBar
   rotate: false
-  xy: 516, 488
+  xy: 918, 488
   size: 90, 20
   orig: 90, 20
   offset: 0, 0
